@@ -1,0 +1,27 @@
+replicaCount: 1
+
+image:
+  repository: flask-app
+  tag: latest
+  pullPolicy: Never
+
+serviceAccount:
+  create: false  # Empêche Helm d'essayer de créer un ServiceAccount
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 5000
+  nodePort: 30007
+
+ingress:
+  enabled: false  # Désactive l'ingress pour éviter l'erreur
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
