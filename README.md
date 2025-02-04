@@ -3,11 +3,10 @@ title: "Du code au cluster : un workflow DevOps complet"
 author: "Jeremy Som"
 date: "`r Sys.Date()`"
 output: 
-  html_document:
+  github_document:
     toc: true
     toc_depth: 2
     number_sections: true
-    theme: united
 ---
 
 
