@@ -25,11 +25,11 @@
 
 ---
 
-# 1. Introduction
+# Introduction
 
 Ce projet vise à appliquer un workflow DevOps complet, de la création d’une application simple jusqu'à sa mise en production automatisée sur *Kubernetes* en suivant les pratiques *GitOps*. Il inclut également les bonnes pratiques en matière de qualité et sécurité.
 
-## 1.1 Structure
+## Structure
 
 Le projet est organisé en **2 parties** :
 
@@ -38,14 +38,14 @@ L’application, développée en Python avec *Flask*, sera contenue dans un cont
 
 -	**Renforcement du pipeline : qualité, sécurité et tests** : dans un second temps, le but sera d'améliorer la qualité et la sécurité de l’application en intégrant des tests unitaires et d’intégration avec *Pytest*, ainsi que des scans de vulnérabilité avec *Snyk*.
 
-## 1.2 Technologies
+## Technologies
 - **Langage & Framework** : Python (Flask)
 - **Containerisation & Orchestration** : Docker, Kubernetes (Minikube)
 - **Déploiement & Automatisation** : Helm, Argo CD, GitOps
 - **Sécurité** : Snyk
 - **Qualité du code** : Flake8, Pytest
 
-## 1.3 Concepts
+## Concepts
 - **CI/CD** (*Continuous Integration and Continuous Deployment*) : automatisation des tests et du déploiement de l'application à chaque mise à jour du code. Ceci est assuré par *GitHub* et *Argo CD*, qui surveillent les changements et déclenchent les mises à jour sur Kubernetes
 - **GitOps** : approche où Git sert de source unique de vérité (*Single Source of Truth*) pour les déploiements. Argo CD surveille le repo Git et s'assure que l'état du cluster Kubernetes reflète toujours les fichiers de configuration stockés dans le repo
 - **Infrastructure as Code** (*IaC*) : utilisation de fichiers YAML et de Helm Charts pour définir et automatiser l'infrastructure. Cela permet une gestion reproductible et versionnée des ressources Kubernetes
@@ -61,9 +61,9 @@ L’application, développée en Python avec *Flask*, sera contenue dans un cont
 
 ---
 
-# 2. Mise en place d'un pipeline basique
+# Mise en place d'un pipeline basique
 
-## 2.1 Objectifs de base
+## Objectifs de base
 1. **[Développement de l’application](#développement-de-lapplication-api-flask)** : création d’une API Flask simple avec un  endpoint : GET / qui retourne le message « Hello from Flask in Kubernetes ! ».
 2. **[Containerisation avec Docker](#containerisation-avec-docker)** : packaging de l’application sous forme d’image Docker pour garantir la portabilité et la reproductibilité.
 3. **[Déploiement statique sur Kubernetes](#déploiement-statique-sur-kubernetes)** : création et gestion des ressources Kubernetes (deployment, service, namespace) avec des manifests YAML statiques.
@@ -72,9 +72,9 @@ L’application, développée en Python avec *Flask*, sera contenue dans un cont
 
 ---
 
-## 2.2 Développement de l’application (API Flask)
+## Développement de l’application (API Flask)
 
-### 2.2.1 Structure du projet
+### Structure du projet
 
 ```bash
 flask-k8s-argo/
@@ -106,7 +106,7 @@ git init
 
 Ensuite, on peut écrire le code de l'application.
 
-### 2.2.2 Code Flask (`app/main.py`)
+### Code Flask (`app/main.py`)
 
 ```python
 from flask import Flask, jsonify
@@ -133,7 +133,7 @@ from app import main  # Import du fichier main.py
 
 ```
 
-### 2.2.3 Installation des dépendances
+### Installation des dépendances
 
 Les dépendances requises sont listées dans le fichier *requirements.txt*. Actuellement, nous n'avons besoin que de Flask:
 
@@ -152,7 +152,7 @@ Si ça ne marche pas, par exemple parce que *pip* n'est pas dans le *PATH*, on p
 python3 -m pip install -user flask
 ```
 
-### 2.2.4 Test en local
+### Test en local
 
 A ce stade, on peut déjà vérifier que l'application fonctionne :
 
@@ -168,9 +168,9 @@ Le message "*Hello from Flask in Kubernetes with Argo!*" devrait s'afficher.
 
 ---
 
-## 2.3 Containerisation avec Docker
+## Containerisation avec Docker
 
-### 2.3.1 Dockerfile
+### Dockerfile
 
 Maintenant qu'on sait que l'application fonctionne, on peut la containeriser. On commence par créer le Dockerfile :
 
@@ -195,7 +195,7 @@ EXPOSE 5000
 CMD ["python3", "app/main.py"]
 ```
 
-### 2.3.2 Build & run
+### Build & run
 
 Maintenant, ce Dockerfile peut être utilisé pour créer une image Docker qu'on appellera *flask-app* :
 
@@ -217,9 +217,9 @@ On devrait à nouveau avoir le message "*Hello from Flask in Kubernetes with Arg
 
 ---
 
-## 2.4 Déploiement statique sur Kubernetes avec Minikube
+## Déploiement statique sur Kubernetes avec Minikube
 
-### 2.4.1 Installation & démarrage
+### Installation & démarrage
 
 Maintenant qu'on a un container Docker qui fonctionne, on peut le déployer dans un cluster Kubernetes. On peut utiliser GKE (Google Kubernetes Engine, payant et accessible depuis l'extérieur) ou Minikube (gratuit, local). On utilisera ici Minikube.
 
@@ -239,7 +239,7 @@ kubectl get nodes
 ```
 Si *Status=Ready*, le cluster est opérationnel. On peut créer un namespace pour l'application. Ceci permet de la séparer d'autres applications éventuelles, et donc de bien gérer les ressources Kubernetes.
 
-### 2.4.2 Création du namespace Kubernetes
+### Création du namespace Kubernetes
 
 ```bash
 kubectl create namespace flask-app
@@ -254,7 +254,7 @@ Le namespace *flask-app* devrait apparaître dans la liste. Les namespaces suiva
 
 Maintenant que Minikube tourne et qu’on a un namespace, on peut passer au déploiement.
 
-### 2.4.3 Manifests YAML (`manifests/`)
+### Manifests YAML (`manifests/`)
 
 Pour le déploiement, il nous faut deux manifests YAML :
 
@@ -345,7 +345,7 @@ Il faut noter que NodePort est pratique pour tester localement, mais pas recomma
 
 Une fois les manifests créés, on peut les appliquer dans Kubernetes.
 
-### 2.4.4 Application des manifests
+### Application des manifests
 
 Concrètement, Kubernetes va lire ces manifests et créer les ressources correspondantes.
 
@@ -374,7 +374,7 @@ Le résultat de cette commande devrait ressembler à ceci :
 
 L'adresse IP du cluster, *10.111.255.215*, n'est accessible que depuis l'intérieur du cluster. *Port(s)=80:300007/TCP* indique que le port 30007 du noeud (le NodePort accessible depuis l'extérieur) est redirigé vers le port 80 du service, qui est lui-même redirigé vers le port 5000 de l'application Flask.
 
-### 2.4.5 Accès à l'application
+### Accès à l'application
 
 A ce stade, il y a deux manière d'accéder à l'application :
 
@@ -397,13 +397,13 @@ Actuellement, l'application tourne bien dans Kubernetes avec des manifests YAML 
 
 ---
 
-## 2.5 Déploiement dynamique avec Helm
+## Déploiement dynamique avec Helm
 
 Le "problème" des manifests statiques est que si on veut modifier des valeurs comme le nombre de *replicas*, l'image Docker, le NodePort, etc..., il faudrait aller modifier ces fichiers manuellement à chaque changement.
 
 *Helm* permet de transformer ces fichiers YAML en **templates**, ce qui permet une configuration dynamique et non plus statique. Cela se fait grâce au fichier *values.yaml*.
 
-### 2.5.1 Installation de Helm
+### Installation de Helm
 
 *Helm* peut être installé avec la commande suivante (sur Mac) :
 
@@ -412,7 +412,7 @@ brew install helm
 helm version
 ```
 
-### 2.5.2 Structure du Chart Helm
+### Structure du Chart Helm
 
 Une fois installé, la commande suivante crée un **chart Helm** dans le répertoire du projet (nommé ici *flask-chart*) :
 
@@ -552,7 +552,7 @@ spec:
       nodePort: {{ .Values.service.nodePort }}
 ```
 
-### 2.5.3 Installation du Chart Helm
+### Installation du Chart Helm
 
 A ce stade, l'application est prête à être redéployée avec *Helm* :
 
@@ -577,7 +577,7 @@ Si tout fonctionne, un peu supprimer ces fichiers obsolètes :
 
 ---
 
-## 2.6 Automatisation avec Argo CD
+## Automatisation avec Argo CD
 
 Actuellement, on a un déploiement dynamique avec Helm, mais l’application est toujours déployée manuellement avec la commande *helm install*.
 L’objectif est maintenant d’automatiser entièrement les déploiements en suivant une approche GitOps grâce à Argo CD. 
@@ -585,7 +585,7 @@ L'idée est qu'Argo CD automatise le déploiement de l'application en se basant 
 
 C'est donc un bon moment pour créer un repo Git (si pas déjà le cas). 
 
-### 2.6.1 Installation d'Argo CD
+### Installation d'Argo CD
 
 Argo CD peut être installé directement dans Kubernetes via *kubectl* :
 
@@ -601,7 +601,7 @@ kubectl get pods -n argocd
 ```
 Les pods doivent être en *Running* avec *Ready 1/1* (ça peut prendre quelques minutes).
 
-### 2.6.2 Exposer Argo CD et y accéder
+### Exposer Argo CD et y accéder
 
 Par défaut, Argo CD tourne en mode *ClusterIP* et n'est pas accessible depuis l'extérieur (donc uniquement accessible depuis l'intérieur du cluster). 
 
@@ -628,7 +628,7 @@ kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.pas
 ```
 Une fois connecté, on peut ajouter notre application.
 
-### 2.6.3 Ajouter le repo à Argo CD
+### Ajouter le repo à Argo CD
 
 Argo CD va surveiller certaines parties du repo Github de l'application, principalement celles qui définissent l'infrastructure et le déploiement (Helm charts, manifests Kubernetes, ...). Dès qu'il détectera un changement (par exemple dans Helm, les manifests, etc...), il nous informera que notre déploiement Kubernetes est "OutOfSync", et nous proposera de le mettre à jour.
 
@@ -641,7 +641,7 @@ Pour l'URL, on met : https://github.com/notre_utilisateur/flask-k8s-argo.git
 On laisse les champs Username et Password vides.
 Finalement, on clique sur *Connect*. On devrait voir le *connection status* qui est *successful*.
 
-### 2.6.4 Ajouter l'application à Argo CD
+### Ajouter l'application à Argo CD
 
 Toujours dans l'interface d'Argo CD, on clique sur *Applications*, puis *New App*.
 On remplit les informations suivantes : 
@@ -683,7 +683,7 @@ Lorsqu'un changement est détecté (par exemple une modification du nombre de r�
 
 Actuellement, la synchronisation entre le déploiement de l'application et le code du repo associé n'est pas automatique. Il faut cliquer sur le bouton "Sync". Voyons comment activer l'auto-sync pour que tout modification dans le repo déclenche automatiquement une mise à jour sur Kubernetes.
 
-### 2.6.5 Activation de l'Auto-Sync dans Argo CD
+### Activation de l'Auto-Sync dans Argo CD
 
 Dans l'interface d'Argo, on clique sur l'application, puis sur "Details". Ensuite, dans l'onglet "SYNC POLICY", on clique sur "Enable auto-sync". 
 
@@ -746,16 +746,16 @@ Pour aller plus loin, on va maintenant améliorer la qualité et la sécurité d
 
 ---
 
-# 3. Renforcement du pipeline : qualité, sécurité et tests
+# Renforcement du pipeline : qualité, sécurité et tests
 
-## 3.1 Objectifs avancés
+## Objectifs avancés
 
 1. **[Tests et qualité du code avec Pytest et flake8](#tests-et-qualité-du-code-avec-pytest-et-flake8)** : mise en place de tests garantir que l'application fonctionne correctement avant d'être déployée en production
 2. **[Sécurité](#sécurité)** : analyse des dépendances avec Snyk
 
 ---
 
-## 3.2 Tests et qualité du code avec Pytest et flake8
+## Tests et qualité du code avec Pytest et flake8
 
 Avant d'effectuer des tests, on fait analyse la qualité du code. Pour ce faire, on va utiliser *flake8*, un *linter* pour Python. Un *linter* est un outil qui analyse le code source pour détecter des erreurs ou des mauvaises pratiques. Par exemple, pour le code suivant : 
 
@@ -779,7 +779,7 @@ Il en existe différents types :
 
 Ces tests seront automatisés avec *GitHub Actions* plus tard afin qu'ils s'exécutent à chaque modification du code.
 
-### 3.2.1 Installation et configuration
+### Installation et configuration
 
 On commence par installer *Pytest* et *flake8* dans notre projet *flask-k8s-argo* :
 
@@ -827,7 +827,7 @@ flask-k8s-argo/
 │── .git
 ```
 
-### 3.2.2 Vérification de la qualité du code avec Flake8
+### Vérification de la qualité du code avec Flake8
 
 Avant d'écrire et d'exécuter des tests, il est important de s'assurer que le code respecte les bonnes pratiques (comme ça, on est sûr de tester ce que l'on veut). *Flake8* permet de détecter des erreurs de style et des problèmes potentiels dans le code : 
 
@@ -885,7 +885,7 @@ max-line-length = 88
 Finalement, on peut aussi exécuter Flake8 automatiquement avant chaque commit en ajoutant un *pre-hook* (on ne le fait pas ici).
 
 
-### 3.2.3 Ecriture des tests unitaires
+### Ecriture des tests unitaires
 
 Il n'y a pas grand chose à tester dans notre application basique, à part vérifier qu'elle retourne bien le message spécifié. On peut vérifier manuellement que tout fonctionne de la manière suivante ; on s'assure que l'application tourne bien dans Kubernetes, on récupère l'adresse et finalement le message :
 
@@ -932,7 +932,7 @@ Tout fonctionne correctement. Si on remplace *assert response.json == {"message"
 
 ![Pytest fail](images/pytestfail.png)
 
-### 3.2.4 Intégration des tests dans Docker
+### Intégration des tests dans Docker
 
 Actuellement, les tests s'exécutent localement, mais on veut aussi les exécuter dans le container. L'objectif est double : 
 
@@ -1009,7 +1009,7 @@ docker run --rm -e RUN_TESTS=true flask-app
 
 Maintenant que tout fonctionne, on peut intégrer ces tests dans un pipeline GitHub Actions.
 
-### 3.2.5 Automatisation des tests avec GitHub Actions
+### Automatisation des tests avec GitHub Actions
 
 On va maintenant automatiser l'exécution des tests et de Flake8 à chaque push dans notre repo Github.
 On commence par créer un workflow GitHub Actions en créant les deux fichiers suivants :
@@ -1133,11 +1133,11 @@ Cependant, même avec un code de qualité, les failles de sécurité restent un 
 
 ---
 
-## 3.3 Sécurité
+## Sécurité
 
 La qualité du code et les tests ne suffisent pas en production. Il faut aussi sécuriser l'application et son environnement. On va donc renforcer la sécurité du projet en analysant les vulnérabilités, en sécurisant les containers et en protégrant l'infrastructure Kubernetes.
 
-### 3.3.1 Analyse des vulnérabilités du code et des dépendances avec Snyk
+### Analyse des vulnérabilités du code et des dépendances avec Snyk
 
 Snyk est un outil qui scanne les dépendances du projet (*requirements.txt*), identifie les vulnérabilités connues (*CVE*), et propose des corrections ou mises à jour.
 
@@ -1247,7 +1247,7 @@ curl http://<URL_MINIKUBE>  # Vérifier que l’API répond avec la nouvelle ver
 
 C'est bien le cas, tout fonctionne correctement.
 
-### 3.3.2 Améliorations possibles
+### Améliorations possibles
 
 Bien que notre pipeline DevOps mis en place couvre déjà les aspects essentiels du déploiement et de la qualité du code, les améliorations suivantes pourraient être envisagées : 
 
@@ -1259,7 +1259,7 @@ Ces améliorations sont un "nice to have" qui ne sont pas indispensables pour un
 
 ---
 
-# 4. Conclusion
+# Conclusion
 
 Ce projet met en place un workflow DevOps complet, allant du développement d'une application Flask jusqu'à son déploiement automatisé sur Kubernetes avec Argo CD en suivant les pratiques GitOps.
 
