@@ -1,16 +1,28 @@
----
-title: "Du code au cluster : un workflow DevOps complet"
-author: "Jeremy Som"
-date: "`r Sys.Date()`"
-output: 
-  github_document:
-    toc: true
-    toc_depth: 2
-    number_sections: true
----
+# Du code au cluster : un workflow DevOps complet
+
+## Tables des matières
+
+- 1. [Introduction](#introduction)
+    - [1.1 Structure](#structure) 
+    - [1.2 Technologies](#technologies) 
+    - [1.3 Concepts](#concepts)  
+
+- 2. [Base : Déploiement d’une application Flask sur Kubernetes](#base--deploiement-dune-application-flask-sur-kubernetes)  
+    - [2.1 Objectifs](#objectifs-base)
+    - [2.2 Développement de l’application (API Flask)](#developpement-de-lapplication-api-flask)
+    - [2.3 Containerisation avec Docker](#containerisation-avec-docker)
+    - [2.4 Déploiement statique sur Kubernetes avec Minikube](#deploiement-statique-sur-kubernetes-avec-minikube)
+    - [2.5 Déploiement dynamique avec Helm](#deploiement-dynamique-avec-helm)
+    - [2.6 Automatisation avec Argo CD](#automatisation-avec-argo-cd)
+    
+- 3. [Approfondissement : Qualité, Sécurité & Observabilité](#approfondissement--qualite-securite--observabilite)
+    - [3.1 Objectifs](#objectifs-approfondissement)
+    - [3.2 Tests et qualité du code avec Pytest et flake8](#tests-et-qualite-du-code-avec-pytest-et-flake8)
+    - [3.3 Sécurité](#securite)
+    - [3.4 Monitoring et logs avec Prometheus](#monitoring-et-logs-avec-prometheus)
 
 
-## Introduction
+# Introduction
 
 Ce projet vise à appliquer un workflow DevOps complet, de la création d’une application simple jusqu'à sa mise en production automatisée sur *Kubernetes* en suivant les pratiques *GitOps*. Il inclut également les bonnes pratiques en matière de qualité, de monitoring et de sécurité.
 
